@@ -156,7 +156,7 @@ screen /dev/ttyUSB0 115200
 ## 📖 Referencias
 
 - [ESP32 I2S Documentation](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/i2s.html)
-- [WDRC en Audífonos](https://www.who.int/publications/i/item/9789241549127)
+- [WDRC en Audífonos](https://journals.lww.com/ear-hearing/abstract/1999/04000/comparison_of_linear_gain_and_wide_dynamic_range.3.aspx)
 - [FFT Processing](https://www.analog.com/media/en/technical-documentation/dsp-book/dsp_book_Ch31.pdf)
 
 ## 🤝 Contribuciones
@@ -171,3 +171,10 @@ Las contribuciones son bienvenidas. Por favor:
 ## 📄 Licencia
 
 Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para detalles.
+
+## 🙌 Equipo
+
+- Nicolás Quezada
+- Kimberly Alejandra Fuentes Barrales
+- Vania Roberts
+
