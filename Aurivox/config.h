@@ -1,15 +1,16 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-// Pines para el micrófono INMP441
+// Pines para el micrófono INMP441 (sin cambios)
 #define I2S_MIC_WS    25
 #define I2S_MIC_SD    33
 #define I2S_MIC_SCK   32
 
-// Pines para el DAC PCM5102A
-#define I2S_BCLK      14
-#define I2S_WCLK      27
-#define I2S_DOUT      26
+// Pines para el MAX98357A
+#define I2S_BCLK      14  // Clock
+#define I2S_WCLK      27  // Word Select (LRC)
+#define I2S_DOUT      26  // Data Out (DIN en MAX98357A)
+#define I2S_SD_MODE   13  // Opcional: Pin de shutdown
 
 // Configuración del sistema de audio
 #define SAMPLE_RATE     44100

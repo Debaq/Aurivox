@@ -9,11 +9,11 @@
  * Diagrama General del Sistema:
  * ===========================
  *
- *   INMP441        Procesamiento Digital          PCM5102A
- *  ┌───────┐      ┌──────────────────┐          ┌────────┐
- *  │ MIC   │ I2S  │  Multiband WDRC  │   I2S    │  DAC   │
- *  │   ◊===┼────▶│    FFT + DSP     ├────────▶│   ♪    │
- *  └───────┘      └──────────────────┘          └────────┘
+ *   INMP441        Procesamiento Digital        MAX98357A
+ *  ┌───────┐      ┌──────────────────┐        ┌────────┐
+ *  │ MIC   │ I2S  │  Multiband WDRC  │  I2S   │  DAC   │
+ *  │   ◊===┼────▶│    FFT + DSP     ├───────▶│   ♪    │
+ *  └───────┘      └──────────────────┘        └────────┘
  *
  * 
  * Diagrama de Procesamiento de Señal:
@@ -42,32 +42,6 @@
  *   0├───┬───┬───┬───┬───▶ Freq (Hz)
  *    0  250  1k  4k  8k
  *       Baja  Media  Alta
- *
- * 
- * Parámetros WDRC por Banda:
- * ========================
- * 
- *  Nivel de Salida (dB)             Banda Baja (250-1000 Hz)
- *   ↑                               - Mayor ganancia (15dB)
- *   │        /                      - Compresión suave (2:1)
- *   │     /··                       - Ataque lento
- *   │  /·                       
- *   │/                          Banda Media (1k-4k Hz)
- *   │                           - Ganancia media (10dB)
- *   └────────────────→         - Compresión media (3:1)
- *        Nivel de              - Ataque medio
- *        Entrada (dB)       
- *                           Banda Alta (4k-8k Hz)
- *                           - Menor ganancia (5dB)
- *                           - Compresión fuerte (4:1)
- *                           - Ataque rápido
- *
- * Procesamiento por Muestra:
- * ========================
- * 
- *  [Sample] → [Window] → [FFT] → [Band Split] → [WDRC] → [IFFT] → [Sample]
- *     ↓          ↓         ↓          ↓           ↓         ↓         ↓
- *    32b    Hamming   Spectrum   3 Bandas    Compress   Time    Stereo Out
  */
 
 //================================================
@@ -104,6 +78,10 @@ void monitor_performance() {
 void setup() {
     Serial.begin(115200);
     
+    // Configurar pin SD_MODE del MAX98357A
+    pinMode(I2S_SD_MODE, OUTPUT);
+    digitalWrite(I2S_SD_MODE, HIGH);  // Activar el amplificador
+    
     setup_i2s_mic();
     setup_i2s_dac();
     
@@ -122,8 +100,10 @@ void setup() {
 }
 
 void loop() {
+    // Buffer para muestras de entrada (32-bit para INMP441)
     int32_t samples_in[BUFFER_SIZE];
-    int32_t samples_out[BUFFER_SIZE * 2];
+    // Buffer para muestras de salida (16-bit para MAX98357A)
+    int16_t samples_out[BUFFER_SIZE * 2];
     size_t bytes_read = 0;
     size_t bytes_written = 0;
     
@@ -145,16 +125,21 @@ void loop() {
     // Procesar con WDRC multibanda
     multiband_wdrc.process(buffer_proc, buffer_proc, BUFFER_SIZE);
     
-    // Convertir de vuelta a int32 y duplicar para estéreo
+    // Convertir de vuelta a int16 y duplicar para estéreo
     for(int i = 0; i < BUFFER_SIZE; i++) {
-        int32_t processed = (int32_t)(buffer_proc[i] * INT32_MAX);
+        // Limitar y escalar a INT16_MAX
+        float sample = buffer_proc[i];
+        if(sample > 1.0f) sample = 1.0f;
+        if(sample < -1.0f) sample = -1.0f;
+        
+        int16_t processed = (int16_t)(sample * INT16_MAX);
         samples_out[i*2] = processed;      // Canal izquierdo
         samples_out[i*2+1] = processed;    // Canal derecho
     }
     
-    // Enviar al DAC
+    // Enviar al MAX98357A
     esp_err_t write_result = i2s_write(I2S_NUM_1, samples_out, 
-                                      bytes_read * 2, &bytes_written, 
+                                      bytes_read, &bytes_written, 
                                       portMAX_DELAY);
                                       
     if (write_result != ESP_OK) {
