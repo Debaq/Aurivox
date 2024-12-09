@@ -175,6 +175,6 @@ Este proyecto está bajo la Licencia MIT. Ver archivo `LICENSE` para detalles.
 ## 🙌 Equipo
 
 - Nicolás Quezada
-- Kimberly Alejandra Fuentes Barrales
+- Kimberly Fuentes
 - Vania Roberts
 
