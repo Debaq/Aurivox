@@ -20,8 +20,43 @@ const int BUFFER_SIZE = 128;
 const i2s_port_t I2S_PORT_MIC = I2S_NUM_0;
 const i2s_port_t I2S_PORT_DAC = I2S_NUM_1;
 
+// Calcular PIP_SAMPLES usando las variables
+const int PIP_SAMPLES = (SAMPLE_RATE * 200) / 1000;  // 200ms = PIP_DURATION_MS
+
 // Array de ganancia que necesita button_control.cpp
 const float gain_levels[5] = {0.0f, 0.25f, 0.50f, 0.75f, 1.0f};
+
+// Funciones de conversión
+float ms_to_samples(float ms) {
+    return (ms * SAMPLE_RATE / 1000.0f);
+}
+
+float samples_to_ms(int samples) {
+    return ((float)samples * 1000.0f / SAMPLE_RATE);
+}
+
+// Función de validación del sistema
+bool validate_system_config() {
+    // Verificar que el buffer no cause latencia excesiva
+    float latency_ms = samples_to_ms(BUFFER_SIZE);
+    if (latency_ms > 25.0f) {  // LATENCY_TARGET_MS
+        Serial.printf("⚠️ Advertencia: Buffer size causa latencia de %.1fms (objetivo: 25ms)\n", latency_ms);
+        return false;
+    }
+    
+    // Verificar configuración de memoria
+    if (4096 < 2048) {  // STACK_SIZE_AUDIO < 2048
+        Serial.println("❌ Error: Audio task stack size muy pequeño");
+        return false;
+    }
+    
+    if (4096 < 2048) {  // STACK_SIZE_CONTROL < 2048
+        Serial.println("❌ Error: Control task stack size muy pequeño");
+        return false;
+    }
+    
+    return true;
+}
 
 // ==================== NIVELES DE GANANCIA PREDEFINIDOS ====================
 

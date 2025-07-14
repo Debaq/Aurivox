@@ -35,14 +35,12 @@
 
 // ==================== CONFIGURACIONES DE AUDIO ====================
 
-// Parámetros básicos de audio
-#define SAMPLE_RATE     16000   // 16kHz - Optimizado para voz
-#define BUFFER_SIZE     128     // 128 muestras por buffer
+// Parámetros básicos de audio (definidos como variables en audio_config.cpp)
+// Estos valores están disponibles como extern variables, no como #define
 #define LATENCY_TARGET_MS   25  // Latencia objetivo en ms
 
-// Puertos I2S
-#define I2S_PORT_MIC    I2S_NUM_0   // Puerto para micrófono
-#define I2S_PORT_DAC    I2S_NUM_1   // Puerto para DAC
+// Puertos I2S (definidos como variables en audio_config.cpp)
+// Estos valores están disponibles como extern variables, no como #define
 
 // Tipos de datos de audio
 typedef int32_t mic_sample_t;   // Micrófono: 32-bit
@@ -63,8 +61,9 @@ typedef float   dsp_sample_t;   // Procesamiento DSP: float
 #define PIP_GAP_MS          100   // 100ms entre pips
 #define PI                  3.14159265359
 
-// Calcular samples por pip
-#define PIP_SAMPLES         ((SAMPLE_RATE * PIP_DURATION_MS) / 1000)
+// Calcular samples por pip (usando variables extern)
+// Nota: PIP_SAMPLES se calculará en runtime ya que SAMPLE_RATE es variable
+extern const int PIP_SAMPLES;
 
 // ==================== CONFIGURACIONES DSP ====================
 
@@ -255,10 +254,11 @@ extern const float EQ_FREQUENCIES[EQ_BANDS_COUNT];
 extern const AudioConfig DEFAULT_CONFIG;
 
 // Variables de hardware (definidas en audio_config.cpp)
-extern const int SAMPLE_RATE;
-extern const int BUFFER_SIZE;
-extern const i2s_port_t I2S_PORT_MIC;
-extern const i2s_port_t I2S_PORT_DAC;
+extern const int SAMPLE_RATE;      // 16000 Hz
+extern const int BUFFER_SIZE;      // 128 muestras
+extern const i2s_port_t I2S_PORT_MIC;  // I2S_NUM_0
+extern const i2s_port_t I2S_PORT_DAC;   // I2S_NUM_1
+extern const int PIP_SAMPLES;      // Calculado: (SAMPLE_RATE * PIP_DURATION_MS) / 1000
 
 // ==================== MACROS ÚTILES ====================
 
@@ -269,9 +269,9 @@ extern const i2s_port_t I2S_PORT_DAC;
 // Limitación de valores
 #define CLAMP(val, min, max) ((val) < (min) ? (min) : ((val) > (max) ? (max) : (val)))
 
-// Conversión de samples
-#define MS_TO_SAMPLES(ms)   ((int)((ms) * SAMPLE_RATE / 1000.0f))
-#define SAMPLES_TO_MS(smp)  ((float)(smp) * 1000.0f / SAMPLE_RATE)
+// Conversión de samples (usando variables extern)
+extern float ms_to_samples(float ms);
+extern float samples_to_ms(int samples);
 
 // ==================== VERIFICACIONES DE COMPILACIÓN ====================
 
