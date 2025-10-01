@@ -2,21 +2,21 @@
 // Definiciones de constantes globales y configuraciones para Aurivox v3.0
 // Implementación de todas las constantes declaradas en audio_config.h
 
-#include "audio_config.h"
 #include "Arduino.h"
 #include <math.h>
+#include "audio_config.h"
 
 // ==================== CONSTANTES GLOBALES REQUERIDAS ====================
 
 // Primero undefine los macros para evitar conflictos
-#undef SAMPLE_RATE
-#undef BUFFER_SIZE
-#undef I2S_PORT_MIC  
-#undef I2S_PORT_DAC
+//#undef SAMPLE_RATE
+//#undef BUFFER_SIZE
+//#undef I2S_PORT_MIC  
+//#undef I2S_PORT_DAC
 
 // Ahora definir las variables que los otros archivos necesitan
-const int SAMPLE_RATE = 16000;
-const int BUFFER_SIZE = 128;
+//const int SAMPLE_RATE = 16000;
+//const int BUFFER_SIZE = 128;
 const i2s_port_t I2S_PORT_MIC = I2S_NUM_0;
 const i2s_port_t I2S_PORT_DAC = I2S_NUM_1;
 

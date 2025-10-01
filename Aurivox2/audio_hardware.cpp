@@ -2,7 +2,7 @@
 // Configuración y manejo de hardware I2S para Aurivox v3.0
 // Hardware: XIAO ESP32S3 + micrófono ICS-43434 + DAC MAX98357A
 // Configuración estable que no se modificará frecuentemente
-
+#include "audio_config.h"
 #include "driver/i2s.h"
 #include "esp_err.h"
 #include "Arduino.h"
@@ -22,10 +22,10 @@
 // ==================== CONFIGURACIONES DE AUDIO ====================
 
 // Parámetros de audio (referenciados desde main)
-extern const int SAMPLE_RATE;      // 16000 Hz
-extern const int BUFFER_SIZE;      // 128 muestras
-extern const i2s_port_t I2S_PORT_MIC;  // I2S_NUM_0
-extern const i2s_port_t I2S_PORT_DAC;  // I2S_NUM_1
+//extern const int SAMPLE_RATE;      // 16000 Hz
+//extern const int BUFFER_SIZE;      // 128 muestras
+//extern const i2s_port_t I2S_PORT_MIC;  // I2S_NUM_0
+//extern const i2s_port_t I2S_PORT_DAC;  // I2S_NUM_1
 
 // ==================== VARIABLES DE ESTADO ====================
 

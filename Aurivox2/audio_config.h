@@ -254,8 +254,8 @@ extern const float EQ_FREQUENCIES[EQ_BANDS_COUNT];
 extern const AudioConfig DEFAULT_CONFIG;
 
 // Variables de hardware (definidas en audio_config.cpp)
-extern const int SAMPLE_RATE;      // 16000 Hz
-extern const int BUFFER_SIZE;      // 128 muestras
+#define SAMPLE_RATE     16000
+#define BUFFER_SIZE     128
 extern const i2s_port_t I2S_PORT_MIC;  // I2S_NUM_0
 extern const i2s_port_t I2S_PORT_DAC;   // I2S_NUM_1
 extern const int PIP_SAMPLES;      // Calculado: (SAMPLE_RATE * PIP_DURATION_MS) / 1000
